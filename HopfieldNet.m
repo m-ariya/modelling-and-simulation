@@ -3,6 +3,7 @@ classdef HopfieldNet
     properties
         N                           % Number of Neurons
         W                           % Weight matrix
+        E                           % Energy array
         learningRule                % Hebbian/Storkey/Delta
         memories                    % Arrays of [1 -1]
         currentState                % States of neurons at any given step
@@ -42,8 +43,9 @@ classdef HopfieldNet
             end  
         end
         
-        
-        function [inputMemory, step] = reconstruct(net, inputMemory)
+      
+ 
+        function [reconstructedMemory, step] = reconstruct(net, inputMemory)
             % Reconstructs (possibly corrupted) memory, also returns
             % the number of needed steps
             net.currentState = inputMemory;        % Initialise the state
@@ -51,10 +53,11 @@ classdef HopfieldNet
                 newState = update(net);            % Update until no 
                 if net.currentState == newState    % changes occur
                     break;
-                end
+                else
                 net.currentState = newState;
+                end
             end
-           inputMemory = net.currentState;
+             reconstructedMemory = net.currentState;
         end
         
         function newState = update(net)
@@ -62,13 +65,14 @@ classdef HopfieldNet
             newState = net.currentState;
             randOrd = randperm(net.N);     % generate random node sequence
             for idx = 1:net.N
-                energy = (net.W(randOrd(idx),:) * newState');
-                if energy > 0
+                dw = (net.W(randOrd(idx),:) * newState');
+                if dw > 0
                     newState(randOrd(idx)) = 1;
                 else
                     newState(randOrd(idx)) = -1;
                 end
             end
         end
+        
     end
 end

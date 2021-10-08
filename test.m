@@ -29,6 +29,7 @@ n = n.train(memories);
 % Test reconstruction of a full memory
 testMemo = memories(1,:);
 out = n.reconstruct(testMemo);
+n.E
 
 figure(1)
 image(reshape(testMemo,8,8),'CDataMapping','scaled')
@@ -40,9 +41,9 @@ image(reshape(out,8,8),'CDataMapping','scaled')
 title("Output")
 colorbar
 
-% Test reconstruction of a corrupted memory
+%Test reconstruction of a corrupted memory
 testMemo = memories(1,:);
-flippedNum = 36; % lmao it works with 36 flipped bits
+flippedNum = 30; 
 flippedIdx = randi(size, 1, flippedNum);
 testMemo(flippedIdx) = -1*testMemo(flippedIdx);
 out = n.reconstruct(testMemo);
