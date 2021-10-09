@@ -23,20 +23,37 @@ classdef HopfieldNet
             % Hebbian leaning for the weight matrix
             numOfMemories = size(net.memories,1);
             for idx = 1:numOfMemories
-              memory = net.memories(idx,:);
-              net.W = net.W + (memory' * memory);
+                memory = net.memories(idx,:);
+                net.W = net.W + (memory' * memory);
             end
             net.W = net.W/numOfMemories; % Normalise
             net.W = net.W - eye(net.N);  % Remove self connections 
         end
         
+        function net = strokey(net)
+            % Storkey learning for the weight matrix
+            numOfMemories = size(net.memories,1);
+            for idx = 1:numOfMemories
+                memory = net.memories(idx,:);
+                
+                % Compute components
+                hebbian_term    = memory' * memory - eye(net.N);
+                net_inputs = net.W * memory';
+                pre_synaptic = memory' * net_inputs';
+                post_synaptic = pre_synaptic';
+    
+                net.W = net.W + (hebbian_term - pre_synaptic - post_synaptic)/net.N;
+            end
+        end
+        
         function net = train(net, memories)
             % Compures weight matrix according to the learning rule
-             net.memories = memories;
+            net.memories = memories;
             switch net.learningRule
                 case 'Hebbian'
                     net = hebbian(net);
                 case 'Storkey'
+                    net = strokey(net);
                 case 'Delta'
                 otherwise
                     fprintf('Error, the leraning rule is not recognized!\n');
