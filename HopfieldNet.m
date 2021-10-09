@@ -4,8 +4,9 @@ classdef HopfieldNet
         N                           % Number of Neurons
         W                           % Weight matrix
         E                           % Energy array
-        learningRule                % Hebbian/Storkey/Delta
+        learningRule                % Hebbian/Storkey/Projection
         memories                    % Arrays of [1 -1]
+        numOfMemories
         currentState                % States of neurons at any given step
         maxSteps = 100
     end
@@ -21,19 +22,17 @@ classdef HopfieldNet
         
         function net = hebbian(net)
             % Hebbian leaning for the weight matrix
-            numOfMemories = size(net.memories,1);
-            for idx = 1:numOfMemories
+            for idx = 1:net.numOfMemories
                 memory = net.memories(idx,:);
                 net.W = net.W + (memory' * memory);
             end
-            net.W = net.W/numOfMemories; % Normalise
+            net.W = net.W/net.numOfMemories; % Normalise
             net.W = net.W - eye(net.N);  % Remove self connections 
         end
         
         function net = strokey(net)
             % Storkey learning for the weight matrix
-            numOfMemories = size(net.memories,1);
-            for idx = 1:numOfMemories
+            for idx = 1:net.numOfMemories
                 memory = net.memories(idx,:);
                 
                 % Compute components
@@ -46,18 +45,31 @@ classdef HopfieldNet
             end
         end
         
+        function net = projection(net)
+            for idx = 1:net.numOfMemories
+                memory = net.memories(idx,:);
+                inverse = pinv(reshape(memory, 8, 8));
+                inverse = reshape(inverse, 1, []);
+                net.W = net.W + (memory' * inverse);
+            end
+            net.W = net.W/net.numOfMemories; % Normalise
+        end
+        
         function net = train(net, memories)
             % Compures weight matrix according to the learning rule
             net.memories = memories;
+            net.numOfMemories = size(net.memories,1);
             switch net.learningRule
                 case 'Hebbian'
                     net = hebbian(net);
                 case 'Storkey'
                     net = strokey(net);
-                case 'Delta'
+                case 'Projection'
+                    net = projection(net);
                 otherwise
                     fprintf('Error, the leraning rule is not recognized!\n');
             end  
+            net.W(boolean(eye(net.N))) = 0;  % Remove self connections 
         end
         
       

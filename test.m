@@ -31,30 +31,34 @@ flippedIdx = randi(size, 1, flippedNum);
 testMemoDisturbed = testMemo;
 testMemoDisturbed(flippedIdx) = -1*testMemo(flippedIdx);
 
+gridRow = 2; 
+gridCol = 2;
+
 %% ------ Simulation Hebbian ------
 heb_net = HopfieldNet(size, 'Hebbian');
 heb_net = heb_net.train(memories);
 
 % Plot undistorted input
-subplot(5,2,1);
+figure('Name','Hebbian')
+subplot(gridRow,gridCol,1);
 image(reshape(testMemo,8,8),'CDataMapping','scaled')
 title("Input")
 colorbar
 
 % Plot undistorted output
-subplot(5,2,2);
+subplot(gridRow,gridCol,2);
 image(reshape(heb_net.reconstruct(testMemo),8,8),'CDataMapping','scaled')
 title("Output")
 colorbar
 
 % Plot distorted input
-subplot(5,2,3);
+subplot(gridRow,gridCol,3);
 image(reshape(testMemoDisturbed,8,8),'CDataMapping','scaled')
 title("Distorted input")
 colorbar
 
 % Plot distorted output
-subplot(5,2,4);
+subplot(gridRow,gridCol,4);
 image(reshape(heb_net.reconstruct(testMemoDisturbed),8,8),'CDataMapping','scaled')
 title("Output")
 colorbar
@@ -64,29 +68,56 @@ stor_net = HopfieldNet(size, 'Storkey');
 stor_net = stor_net.train(memories);
 
 % Plot undistorted input
-subplot(5,2,7);
+figure('Name','Storkey')
+subplot(gridRow,gridCol,1);
 image(reshape(testMemo,8,8),'CDataMapping','scaled')
 title("Input")
 colorbar
 
 % Plot undistorted output
-subplot(5,2,8);
+subplot(gridRow,gridCol,2);
 image(reshape(stor_net.reconstruct(testMemo),8,8),'CDataMapping','scaled')
 title("Output")
 colorbar
 
 % Plot distorted input
-subplot(5,2,9);
+subplot(gridRow,gridCol,3);
 image(reshape(testMemoDisturbed,8,8),'CDataMapping','scaled')
 title("Distorted input")
 colorbar
 
 % Plot distorted output
-subplot(5,2,10);
+subplot(gridRow,gridCol,4);
 image(reshape(stor_net.reconstruct(testMemoDisturbed),8,8),'CDataMapping','scaled')
 title("Output")
 colorbar
 
+%% ------ Simulation Pseudo-inverse (projection) ------
 
+proj_net = HopfieldNet(size, 'Projection');
+proj_net = proj_net.train(memories);
 
+% Plot undistorted input
+figure('Name','Pseudo-Inverse')
+subplot(gridRow,gridCol,1);
+image(reshape(testMemo,8,8),'CDataMapping','scaled')
+title("Input")
+colorbar
 
+% Plot undistorted output
+subplot(gridRow,gridCol,2);
+image(reshape(stor_net.reconstruct(testMemo),8,8),'CDataMapping','scaled')
+title("Output")
+colorbar
+
+% Plot distorted input
+subplot(gridRow,gridCol,3);
+image(reshape(testMemoDisturbed,8,8),'CDataMapping','scaled')
+title("Distorted input")
+colorbar
+
+% Plot distorted output
+subplot(gridRow,gridCol,4);
+image(reshape(stor_net.reconstruct(testMemoDisturbed),8,8),'CDataMapping','scaled')
+title("Output")
+colorbar
