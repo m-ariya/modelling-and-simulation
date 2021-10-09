@@ -26,7 +26,7 @@ memories = [cre;cir;squ;tri];
 testMemo = memories(1,:);
 % Number of flipped pixels in disturbed input
 size = 64;
-flippedNum = 30; 
+flippedNum = 28; 
 flippedIdx = randi(size, 1, flippedNum);
 testMemoDisturbed = testMemo;
 testMemoDisturbed(flippedIdx) = -1*testMemo(flippedIdx);

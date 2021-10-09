@@ -26,8 +26,7 @@ classdef HopfieldNet
                 memory = net.memories(idx,:);
                 net.W = net.W + (memory' * memory);
             end
-            net.W = net.W/net.numOfMemories; % Normalise
-            net.W = net.W - eye(net.N);  % Remove self connections 
+            net.W = net.W/net.N;
         end
         
         function net = strokey(net)
@@ -46,13 +45,8 @@ classdef HopfieldNet
         end
         
         function net = projection(net)
-            for idx = 1:net.numOfMemories
-                memory = net.memories(idx,:);
-                inverse = pinv(reshape(memory, 8, 8));
-                inverse = reshape(inverse, 1, []);
-                net.W = net.W + (memory' * inverse);
-            end
-            net.W = net.W/net.numOfMemories; % Normalise
+             net = hebbian(net);
+             net.W = pinv(net.W);
         end
         
         function net = train(net, memories)
