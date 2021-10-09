@@ -45,8 +45,9 @@ classdef HopfieldNet
         end
         
         function net = projection(net)
-             net = hebbian(net);
-             net.W = pinv(net.W);
+             memories = (net.memories)';    % full matrix where columns are iput patterns
+             net.W = memories * pinv(memories);
+             %net.W = net.W/net.N;
         end
         
         function net = train(net, memories)
