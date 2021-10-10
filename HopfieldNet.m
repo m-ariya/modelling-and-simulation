@@ -64,7 +64,7 @@ classdef HopfieldNet
                 otherwise
                     fprintf('Error, the leraning rule is not recognized!\n');
             end  
-            net.W(boolean(eye(net.N))) = 0;  % Remove self connections 
+            net.W(eye(net.N) == 1) = 0;  % Remove self connections 
         end
         
       
