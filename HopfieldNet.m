@@ -53,6 +53,7 @@ classdef HopfieldNet
         
         function net = train(net, memories)
             % Compures weight matrix according to the learning rule
+            net.W = zeros(net.N,net.N);
             net.memories = memories;
             net.numOfMemories = size(net.memories,1);
             switch net.learningRule
