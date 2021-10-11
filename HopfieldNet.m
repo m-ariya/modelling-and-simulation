@@ -35,7 +35,8 @@ classdef HopfieldNet
                 memory = net.memories(idx,:);
                 
                 % Compute components
-                hebbian_term    = memory' * memory - eye(net.N);
+                hebbian_term    = memory' * memory;
+                hebbian_term(eye(net.N) == 1) = 0;
                 net_inputs = net.W * memory';
                 pre_synaptic = memory' * net_inputs';
                 post_synaptic = pre_synaptic';
@@ -47,7 +48,7 @@ classdef HopfieldNet
         function net = projection(net)
              memories = (net.memories)';    % full matrix where columns are iput patterns
              net.W = memories * pinv(memories);
-             %net.W = net.W/net.N;
+             net.W = net.W/net.N;
         end
         
         function net = train(net, memories)
