@@ -4,7 +4,7 @@ clear;
 % 100 randomly generated input memories
 
 rng(123);  % seed for reproducibility
-memoriesNum = 30;
+memoriesNum = 500;
 neuronsNum = 64;
 memories = randi([0 1], memoriesNum, neuronsNum);
 memories(memories == 0) = -1;
@@ -12,7 +12,7 @@ memories(memories == 0) = -1;
 
 %% ------ Simulation settings ------
 minCapacity = 1;
-maxCapacity = 30;
+maxCapacity = 100;
 maxIter = 10;  % max iterations per capacity
 distortionLevel = 3; % number of flipped bits
 
