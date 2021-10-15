@@ -69,7 +69,7 @@ proj_output = zeros(n+1,n+1,m);
 %% ------ Run simulation ------
 num_iter = 1000;
 dist_start = 0;
-dist_end = 64;
+dist_end = n;
 
 
 % For each memory
@@ -119,6 +119,7 @@ for mem_idx = 1:m
     stor_total_out = stor_output(:,:,mem_idx);
     proj_total_out = proj_output(:,:,mem_idx);
 end
+
 % Normalise the total matrices
 for idx = 1:n+1
     hebi_total_out(idx,:) = hebi_total_out(idx,:) / sum(hebi_total_out(idx,:));
@@ -126,7 +127,7 @@ for idx = 1:n+1
     proj_total_out(idx,:) = proj_total_out(idx,:) / sum(proj_total_out(idx,:));
 end
 
-% Normalise each  row of the output plot such that we see the persentages
+% Normalise each row of the output plot such that we see the persentages
 % instead of a heatmap
 for mem_idx = 1:m
     for n_idx = 1:n+1
@@ -153,8 +154,8 @@ for i = 1:m
     subplot(gridRow,gridCol,i);
     image(hebi_output(:,:,i),'CDataMapping','scaled');
     title(memories_names(i))
-    xlabel('Hamming distance of output to memory')
-    ylabel('Hamming distance of input to memory')
+    xlabel('Distance: output -> memory')
+    ylabel('Distance: input -> memory')
     colorbar
 end
 
@@ -163,8 +164,8 @@ for i = 1:m
     subplot(gridRow,gridCol,i);
     image(stor_output(:,:,i),'CDataMapping','scaled');
     title(memories_names(i))
-    xlabel('Hamming distance of output to memory')
-    ylabel('Hamming distance of input to memory')
+    xlabel('Distance: output -> memory')
+    ylabel('Distance: input -> memory')
     colorbar
 end
 
@@ -173,20 +174,23 @@ for i = 1:m
     subplot(gridRow,gridCol,i);
     image(proj_output(:,:,i),'CDataMapping','scaled');
     title(memories_names(i))
-    xlabel('Hamming distance of output to memory')
-    ylabel('Hamming distance of input to memory')
+    xlabel('Distance: output -> memory')
+    ylabel('Distance: input -> memory')
     colorbar
 end
 
 %% ------ Plot accuracy ------
 figure('Name','Accuracy')
-plot(1:n+1,hebi_total_out(:,1),'-o')
+plot(1:n+1,hebi_total_out(:,1),'-')
 hold on
-plot(1:n+1,stor_total_out(:,1),'-o')
-plot(1:n+1,proj_total_out(:,1),'-o')
+plot(1:n+1,stor_total_out(:,1),'-')
+plot(1:n+1,proj_total_out(:,1),'-')
 hold off
 xlabel('Number of bits flipped in input')
 ylabel('Accuracy')
 legend('Hebbian', 'Storkey', 'Pseudo-inverse')
 grid on
 grid minor
+
+%% ------- Print Distance matrix of original images ------
+dist_memories
