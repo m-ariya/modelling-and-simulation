@@ -27,6 +27,7 @@ classdef HopfieldNet
                 net.W = net.W + (memory' * memory);
             end
             net.W = net.W/net.N;
+            net.W(eye(net.N) == 1) = 0;
         end
         
         function net = strokey(net)
@@ -43,6 +44,7 @@ classdef HopfieldNet
     
                 net.W = net.W + (hebbian_term - pre_synaptic - post_synaptic)/net.N;
             end
+            net.W(eye(net.N) == 1) = 0;
         end
         
         function net = projection(net)
@@ -66,7 +68,6 @@ classdef HopfieldNet
                 otherwise
                     fprintf('Error, the leraning rule is not recognized!\n');
             end  
-            net.W(eye(net.N) == 1) = 0;  % Remove self connections 
         end
         
       
