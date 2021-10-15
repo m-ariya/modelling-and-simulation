@@ -36,6 +36,9 @@ che(che == 0) = -1;
 % Define memory array
 % n: #neurons, m: #memories
 memories = [sta;cir;squ;tri];%;dia;cre;crc;pic;che];
+%memories = rand(4,64);
+%memories(memories < 0.5) = -1;
+%memories(memories >= 0.5) = 1;
 memories_names = ["star", "circle", "square", "triangle"];%, "diamond", "creeper", "crecent", "pickaxe", "checkers"];
 [m,n] = size(memories);
 
@@ -182,10 +185,10 @@ end
 
 %% ------ Plot accuracy ------
 figure('Name','Accuracy')
-plot(1:n+1,hebi_total_out(:,1),'-')
+plot(1:n+1,hebi_total_out(:,1),'LineWidth',1.5)
 hold on
-plot(1:n+1,stor_total_out(:,1),'-')
-plot(1:n+1,proj_total_out(:,1),'-')
+plot(1:n+1,stor_total_out(:,1),'LineWidth',1.5)
+plot(1:n+1,proj_total_out(:,1),'LineWidth',1.5)
 hold off
 xlabel('Number of bits flipped in input')
 ylabel('Accuracy')

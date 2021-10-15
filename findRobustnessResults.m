@@ -20,6 +20,11 @@ sta(sta == 0) = -1;
 % Define memory array
 % n: #neurons, m: #memories
 memories = [sta;cir;squ;tri];
+memories = rand(4,64);
+memories(memories < 0.5) = -1;
+memories(memories >= 0.5) = 1;
+
+
 memories_names = ["star", "circle", "square", "triangle"];
 [m,n] = size(memories);
 
