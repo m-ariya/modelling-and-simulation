@@ -35,8 +35,8 @@ che(che == 0) = -1;
 
 % Define memory array
 % n: #neurons, m: #memories
-memories = [cre;cir;squ;tri];%;dia;sta;crc;pic;che];
-memories_names = ["creeper", "circle", "square", "triangle"];%, "diamond", "star", "crecent", "pickaxe", "checkers"];
+memories = [sta;cir;squ;tri];%;dia;cre;crc;pic;che];
+memories_names = ["star", "circle", "square", "triangle"];%, "diamond", "creeper", "crecent", "pickaxe", "checkers"];
 [m,n] = size(memories);
 
 % Compute the distance between memories
@@ -94,22 +94,20 @@ for mem_idx = 1:m
             proj_out = proj_net.reconstruct(mem);
             
             % Compute the distance from each output to each input and store
-            for i = 1:m
-                hebi_output(mem_in_dist(i),hamdist(memories(i,:), hebi_out) + 1,i) = hebi_output(mem_in_dist(i),hamdist(memories(i,:), hebi_out) + 1,i) + 1;
-                stor_output(mem_in_dist(i),hamdist(memories(i,:), stor_out) + 1,i) = stor_output(mem_in_dist(i),hamdist(memories(i,:), stor_out) + 1,i) + 1;
-                proj_output(mem_in_dist(i),hamdist(memories(i,:), proj_out) + 1,i) = proj_output(mem_in_dist(i),hamdist(memories(i,:), proj_out) + 1,i) + 1;
-            end
+%             for i = 1:m
+%                 hebi_output(mem_in_dist(i),hamdist(memories(i,:), hebi_out) + 1,i) = hebi_output(mem_in_dist(i),hamdist(memories(i,:), hebi_out) + 1,i) + 1;
+%                 stor_output(mem_in_dist(i),hamdist(memories(i,:), stor_out) + 1,i) = stor_output(mem_in_dist(i),hamdist(memories(i,:), stor_out) + 1,i) + 1;
+%                 proj_output(mem_in_dist(i),hamdist(memories(i,:), proj_out) + 1,i) = proj_output(mem_in_dist(i),hamdist(memories(i,:), proj_out) + 1,i) + 1;
+%             end
+            hebi_output(mem_in_dist(mem_idx),hamdist(memories(mem_idx,:), hebi_out) + 1,mem_idx) = hebi_output(mem_in_dist(mem_idx),hamdist(memories(mem_idx,:), hebi_out) + 1,mem_idx) + 1;
+            stor_output(mem_in_dist(mem_idx),hamdist(memories(mem_idx,:), stor_out) + 1,mem_idx) = stor_output(mem_in_dist(mem_idx),hamdist(memories(mem_idx,:), stor_out) + 1,mem_idx) + 1;
+            proj_output(mem_in_dist(mem_idx),hamdist(memories(mem_idx,:), proj_out) + 1,mem_idx) = proj_output(mem_in_dist(mem_idx),hamdist(memories(mem_idx,:), proj_out) + 1,mem_idx) + 1;
         end
     end
     fprintf('Finished memory -%s-\n', memories_names(mem_idx))
 end
 
 %% ------ Prepare data ------
-% Combine the data of each memory for a accuracy plot
-hebi_error = hebi_output(:,1,1);
-stor_error = stor_output(:,1,1);
-proj_error = proj_output(:,1,1);
-
 % Add all samples to a single matrix
 hebi_total_out = zeros(n+1,n+1);
 stor_total_out = zeros(n+1,n+1);
@@ -129,21 +127,21 @@ end
 
 % Normalise each row of the output plot such that we see the persentages
 % instead of a heatmap
-for mem_idx = 1:m
-    for n_idx = 1:n+1
-        % Hebbian
-        maxVal = sum(hebi_output(n_idx,:,mem_idx));
-        hebi_output(n_idx,:,mem_idx) = hebi_output(n_idx,:,mem_idx) / maxVal;
-        
-        % Storkey
-        maxVal = sum(stor_output(n_idx,:,mem_idx));
-        stor_output(n_idx,:,mem_idx) = stor_output(n_idx,:,mem_idx) / maxVal;
-        
-        % Projection
-        maxVal = sum(proj_output(n_idx,:,mem_idx));
-        proj_output(n_idx,:,mem_idx) = proj_output(n_idx,:,mem_idx) / maxVal;
-    end
-end
+% for mem_idx = 1:m
+%     for n_idx = 1:n+1
+%         % Hebbian
+%         maxVal = sum(hebi_output(n_idx,:,mem_idx));
+%         hebi_output(n_idx,:,mem_idx) = hebi_output(n_idx,:,mem_idx) / maxVal;
+%         
+%         % Storkey
+%         maxVal = sum(stor_output(n_idx,:,mem_idx));
+%         stor_output(n_idx,:,mem_idx) = stor_output(n_idx,:,mem_idx) / maxVal;
+%         
+%         % Projection
+%         maxVal = sum(proj_output(n_idx,:,mem_idx));
+%         proj_output(n_idx,:,mem_idx) = proj_output(n_idx,:,mem_idx) / maxVal;
+%     end
+% end
 
 %% ------ Print output ------
 gridRow = 2; 
@@ -157,6 +155,7 @@ for i = 1:m
     xlabel('Distance: output -> memory')
     ylabel('Distance: input -> memory')
     colorbar
+    grid on
 end
 
 figure('Name','Storkey')
@@ -167,6 +166,7 @@ for i = 1:m
     xlabel('Distance: output -> memory')
     ylabel('Distance: input -> memory')
     colorbar
+    grid on
 end
 
 figure('Name','Pseudo-Inverse')
@@ -177,6 +177,7 @@ for i = 1:m
     xlabel('Distance: output -> memory')
     ylabel('Distance: input -> memory')
     colorbar
+    grid on
 end
 
 %% ------ Plot accuracy ------
@@ -194,3 +195,12 @@ grid minor
 
 %% ------- Print Distance matrix of original images ------
 dist_memories
+
+figure(5)
+image(hebi_output(:,:,1),'CDataMapping','scaled');
+title(memories_names(1))
+xlabel('Distance: output -> memory')
+    ylabel('Distance: input -> memory')
+    colorbar
+grid on
+grid minor
