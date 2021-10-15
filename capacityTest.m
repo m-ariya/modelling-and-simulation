@@ -1,10 +1,10 @@
 clear;
 
 %% ------ Prepare input ------
-% 100 randomly generated input memories
+% 200 randomly generated input memories
 
 rng(123);  % seed for reproducibility
-memoriesNum = 500;
+memoriesNum = 1000;
 neuronsNum = 64;
 memories = randi([0 1], memoriesNum, neuronsNum);
 memories(memories == 0) = -1;
@@ -14,7 +14,7 @@ memories(memories == 0) = -1;
 minCapacity = 1;
 maxCapacity = 100;
 maxIter = 10;  % max iterations per capacity
-distortionLevel = 3; % number of flipped bits
+distortionLevel = 20; % number of flipped bits
 
 
 %% ------ Simulation  ------
@@ -55,8 +55,7 @@ for capacity=minCapacity:maxCapacity
            
             % distort input if needed
             if distortionLevel > 0
-                idx = randi([1,neuronsNum], distortionLevel);
-                mem(idx)= -1*mem(idx);
+                mem = distortmem(mem, distortionLevel);
             end
             
             hebOut = hebNet.reconstruct(mem);
@@ -67,6 +66,10 @@ for capacity=minCapacity:maxCapacity
             hebAccPerSubset = hebAccPerSubset + (hamdist(memoriesSubset(memoryIdx,:), hebOut) == 0)/capacity;
             storkeyAccPerSubset = storkeyAccPerSubset + (hamdist(memoriesSubset(memoryIdx,:), storkeyOut) == 0)/capacity;
             projAccPerSubset = projAccPerSubset + (hamdist(memoriesSubset(memoryIdx,:), projOut) == 0)/capacity;
+            %hamdist(memoriesSubset(memoryIdx,:), hebOut)
+            %hebOut
+            %memoriesSubset(memoryIdx,:)
+            
         end
         % compute accuracy for current capacity (running average for all iterations)
         hebAccPerCapacity =  hebAccPerCapacity + hebAccPerSubset/maxIter;
@@ -79,15 +82,21 @@ for capacity=minCapacity:maxCapacity
     projAcc(capacity) = projAccPerCapacity;
 end
 
+
 % plot
 plot([minCapacity:maxCapacity], hebAcc,'LineWidth', 1.5, 'DisplayName','Hebbian')
 hold on
 plot([minCapacity:maxCapacity], storkeyAcc, 'LineWidth',1.5, 'DisplayName','Storkey')
 hold on
-plot([minCapacity:maxCapacity], projAcc, 'LineWidth',1.5, 'DisplayName','Projection');
-xlabel('Capacity') 
+plot([minCapacity:maxCapacity], projAcc, 'LineWidth',1.5, 'DisplayName','Pseudo-inverse');
+%hold on
+%heblim = N/(2*log2(N));
+%storkeylim=;
+xlabel('Number  of stored patterns') 
 ylabel('Accuracy') 
 legend('Location', 'best')
 title(['Accuracy vs Capacity with distortion level=',num2str(distortionLevel)])
 ylim([0,1])
+grid on
+grid minor
 
