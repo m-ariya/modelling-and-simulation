@@ -71,9 +71,8 @@ classdef HopfieldNet
         
       
  
-        function [reconstructedMemory, step] = reconstruct(net, inputMemory)
-            % Reconstructs (possibly corrupted) memory, also returns
-            % the number of needed steps
+        function reconstructedMemory = reconstruct(net, inputMemory)
+            % Reconstructs (possibly corrupted) memory
             net.currentState = inputMemory;        % Initialise the state
             for step=1:net.maxSteps
                 newState = update(net);            % Update until no 
@@ -99,6 +98,32 @@ classdef HopfieldNet
                 end
             end
         end
+        
+        function reconstructedMemory = reconstructVisually(net, inputMemory)
+            net.currentState = inputMemory;        % Initialise the state
+            for step=1:net.maxSteps
+                 newState = net.currentState;
+            randOrd = randperm(net.N);     % generate random node sequence
+            for idx = 1:net.N
+                dw = (net.W(randOrd(idx),:) * newState');
+                if dw > 0
+                    newState(randOrd(idx)) = 1;
+                else
+                    newState(randOrd(idx)) = -1;
+                end
+                    steps = (step-1)*net.N+idx;
+                    repaint(newState,steps);
+            end
+                if net.currentState == newState    % changes occur
+                    break;
+                else
+                net.currentState = newState;
+                end
+            end
+             reconstructedMemory = net.currentState;
+        end
+        
+   
         
     end
 end
