@@ -1,5 +1,13 @@
 function memory = distortmem(memory,numFlips)
 %DISTORTMEM Distorts the input memory by numFlip bits
+%
+%   Input
+%   - memory: the memory vector we want to distort
+%   - numFlips: the number of entries we want to flip in 'memory'
+%
+%   Output
+%   - memory: return the distorted memory vector
+
     [n,m] = size(memory);
     randVec = randperm(n*m);
     randVec = randVec(1:numFlips);
