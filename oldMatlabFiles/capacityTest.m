@@ -1,20 +1,13 @@
 clear;
 
-%% ------ Prepare input ------
-% 200 randomly generated input memories
-
-rng(123);  % seed for reproducibility
-memoriesNum = 1000;
-neuronsNum = 64;
-memories = randi([0 1], memoriesNum, neuronsNum);
-memories(memories == 0) = -1;
+load('Matlab/input/randomPatterns.mat')
 
 
 %% ------ Simulation settings ------
 minCapacity = 1;
-maxCapacity = 100;
-maxIter = 10;  % max iterations per capacity
-distortionLevel = 20; % number of flipped bits
+maxCapacity = 1;
+maxIter = 1;  % max iterations per capacity
+distortionLevel =0; % number of flipped bits
 
 
 %% ------ Simulation  ------
@@ -89,9 +82,13 @@ hold on
 plot([minCapacity:maxCapacity], storkeyAcc, 'LineWidth',1.5, 'DisplayName','Storkey')
 hold on
 plot([minCapacity:maxCapacity], projAcc, 'LineWidth',1.5, 'DisplayName','Pseudo-inverse');
-%hold on
-%heblim = N/(2*log2(N));
-%storkeylim=;
+hold on
+heblim = neuronsNum/(2*log2(neuronsNum));
+storkeylim=neuronsNum/(sqrt(2*log2(neuronsNum)));
+projlim = neuronsNum;
+xline(heblim)
+xline(storkeylim);
+xline(projlim);
 xlabel('Number  of stored patterns') 
 ylabel('Accuracy') 
 legend('Location', 'best')
