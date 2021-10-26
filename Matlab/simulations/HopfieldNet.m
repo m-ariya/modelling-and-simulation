@@ -101,17 +101,20 @@ classdef HopfieldNet
         
         function reconstructedMemory = reconstructVisually(net, inputMemory)
             net.currentState = inputMemory;        % Initialise the state
-            for step=1:net.maxSteps
+            for step=1:1
                  newState = net.currentState;
             randOrd = randperm(net.N);     % generate random node sequence
             for idx = 1:net.N
+                steps = (step-1)*net.N+idx;
+                newState(randOrd(idx)) = 0;
+                repaint(newState,steps);
                 dw = (net.W(randOrd(idx),:) * newState');
                 if dw > 0
                     newState(randOrd(idx)) = 1;
                 else
                     newState(randOrd(idx)) = -1;
                 end
-                    steps = (step-1)*net.N+idx;
+                    
                     repaint(newState,steps);
             end
                 if net.currentState == newState    % changes occur

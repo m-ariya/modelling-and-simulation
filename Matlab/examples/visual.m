@@ -31,26 +31,33 @@ f = figure;
 img = reshape(memories(m,:), 8, 8);
 imagesc(img); 
 axis square;
-colormap bone;
+axis off;
+colormap(bone);
 drawnow;
-title('Innitially flipped bits: 0')
+title('Flipped bits: 0')
 
+ct = uicontrol(f,'Style','text', 'String', 'Learning:');
+ct.Position = [20 370 60 20];
 cRule = uicontrol(f,'Style','popupmenu');
-cRule.Position = [20 370 60 20];
+cRule.Position = [20 355 60 20];
 cRule.String = {'Hebbian','Storkey','Projection'};
 cRule.Callback = @selectRule;
 
+ct = uicontrol(f,'Style','text', 'String', 'Pattern:');
+ct.Position = [20 325 60 20];
 cPattern = uicontrol(f,'Style','popupmenu');
-cPattern.Position = [20 350 60 20];
+cPattern.Position = [20 310 60 20];
 cPattern.String = {'Creeper','Circle','Square', 'Triangle'};
 cPattern.Callback = @selectPattern;
 
+ct = uicontrol(f,'Style','text', 'String', 'Distort:');
+ct.Position = [20 280 60 20];
 cDist = uicontrol(f,'Style','slider', 'Max',64,'Min',0, 'Value', distortionLevel);
-cDist.Position = [20 330 60 20];
+cDist.Position = [20 265 60 20];
 cDist.Callback = @store;
 
 cButton = uicontrol;
-cButton.Position = [20 310 60 20];
+cButton.Position = [20 225 60 20];
 cButton.String = 'Reconstruct';
 cButton.Callback = @reconstruct;
 
@@ -63,6 +70,8 @@ cButton.Callback = @reconstruct;
     end
 
     function  selectPattern(src,event)
+        distortionLevel = 0;
+        cDist.Value = 0;
         val = cPattern.Value;
         str = cPattern.String;
         str{val};
@@ -83,9 +92,10 @@ cButton.Callback = @reconstruct;
         img = reshape(memories(m,:), 8, 8);
         imagesc(img); 
         axis square;
+        axis off;
         colormap bone;
         drawnow;
-        title('Innitially flipped bits: 0')
+        title('Flipped bits: 0')
     end
 
 
@@ -97,14 +107,16 @@ cButton.Callback = @reconstruct;
         imagesc(img); 
         axis square;
         colormap bone;
+        axis off;
         drawnow;
-        title(['Initially flipped bits: ', num2str(distortionLevel)]);
+        title(['Flipped bits: ', num2str(distortionLevel)]);
         
     end
 
     function reconstruct(src,event)
         net = HopfieldNet(64,rule);
         net = net.train(memories);
-        net.reconstructVisually(distorted);
+        reconstructed = net.reconstructVisually(distorted);
+        title(['Hamming distance: ', num2str(hamdist(memories(m, :),reconstructed))]);
     end
 end
