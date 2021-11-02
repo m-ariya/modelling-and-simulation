@@ -1,3 +1,8 @@
+% Setting the path 
+folder = fileparts(which(mfilename)); 
+addpath(genpath(folder));
+
+% Reading patterns to binary vectors
 img_cir = rgb2gray(imread('Images/circle.png')) / 255;
 img_squ = rgb2gray(imread('Images/square.png')) / 255;
 img_tri = rgb2gray(imread('Images/triangle.png')) / 255;
@@ -17,10 +22,10 @@ cre(cre == 0) = -1;
 
 memories = [cre;cir;squ;tri];
 
-tst(memories)
+run_demo(memories)
 
 
-function tst(memories)
+function run_demo(memories)
 rule = 'Hebbian';
 pattern = 'Creeper';
 m = 1;
