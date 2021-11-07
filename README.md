@@ -23,6 +23,6 @@ and
 > modelling-and-simulation/capacity.m
 (Note, it takes some time until you see final results)
 
-- For exact details of each scenario, please see functions <modelling-and-simulation/Matlab/simulations/capacityFunc.m> and <modelling-and-simulation/Matlab/simulations/robustnessFunc.m>. Comments are available.
+- For exact details of each scenario, please see functions ```modelling-and-simulation/Matlab/simulations/capacityFunc.m``` and ```modelling-and-simulation/Matlab/simulations/robustnessFunc.m>```. Comments are available.
 
 
