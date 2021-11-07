@@ -1,3 +1,7 @@
+% This small demo shows a simple visual example of how Hopfield network
+% can reconstruct distorted patterns. This script did not contribute any
+% results to the report.
+
 % Setting the path 
 folder = fileparts(which(mfilename)); 
 addpath(genpath(folder));
@@ -21,11 +25,12 @@ tri(tri == 0) = -1;
 cre(cre == 0) = -1;
 
 memories = [cre;cir;squ;tri];
-
 run_demo(memories)
 
-
+% Main function of the demo, allows configuration on leraning rule, pattern
+% and distortion level
 function run_demo(memories)
+% Initialize
 rule = 'Hebbian';
 pattern = 'Creeper';
 m = 1;
@@ -41,6 +46,7 @@ colormap(bone);
 drawnow;
 title('Flipped bits: 0')
 
+% Set up control for the learning rule
 ct = uicontrol(f,'Style','text', 'String', 'Learning:');
 ct.Position = [20 370 60 20];
 cRule = uicontrol(f,'Style','popupmenu');
@@ -48,6 +54,7 @@ cRule.Position = [20 355 60 20];
 cRule.String = {'Hebbian','Storkey','Projection'};
 cRule.Callback = @selectRule;
 
+% Set up control for the pattern
 ct = uicontrol(f,'Style','text', 'String', 'Pattern:');
 ct.Position = [20 325 60 20];
 cPattern = uicontrol(f,'Style','popupmenu');
@@ -55,12 +62,14 @@ cPattern.Position = [20 310 60 20];
 cPattern.String = {'Creeper','Circle','Square', 'Triangle'};
 cPattern.Callback = @selectPattern;
 
+% Set up control for the distortion level
 ct = uicontrol(f,'Style','text', 'String', 'Distort:');
 ct.Position = [20 280 60 20];
 cDist = uicontrol(f,'Style','slider', 'Max',64,'Min',0, 'Value', distortionLevel);
 cDist.Position = [20 265 60 20];
 cDist.Callback = @store;
 
+% Set up control for the reconstruction button
 cButton = uicontrol;
 cButton.Position = [20 225 60 20];
 cButton.String = 'Reconstruct';

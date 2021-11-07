@@ -1,5 +1,8 @@
 clear all;
 rng(123);
+% Setting the path 
+folder = fileparts(which(mfilename)); 
+addpath(genpath(folder))
 %% ------ Load input ------
 % load memories and memoryNames
 load('Matlab/input/randomPatterns.mat')
